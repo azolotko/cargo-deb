@@ -235,7 +235,7 @@ impl Cargo {
             depends: deb.depends.take().unwrap_or("$auto".to_owned()),
             section: deb.section.take(),
             priority: deb.priority.take().unwrap_or("optional".to_owned()),
-            architecture: get_arch(target.unwrap_or(ARCH)).to_owned(),
+            architecture: deb.architecture.take().unwrap_or_else(|| get_arch(target.unwrap_or(ARCH)).to_owned()),
             conf_files: deb.conf_files.map(|x| x.iter().fold(String::new(), |a, b| a + b + "\n")),
             assets: vec![],
             maintainer_scripts: deb.maintainer_scripts.map(|s| PathBuf::from(s)),
@@ -426,6 +426,7 @@ struct CargoDeb {
     pub features: Option<Vec<String>>,
     pub default_features: Option<bool>,
     pub changelog: Option<String>,
+    pub architecture: Option<String>,
 }
 
 #[derive(Deserialize)]
